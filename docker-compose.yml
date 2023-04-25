@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:14
+    command: -c 'config_file=/etc/postgresql/postgresql.conf' -c 'hba_file=/etc/postgresql/pg_hba.conf' # ボリュームマウントしたファイルを使うようにする設定
+    container_name: sql_puzzle_postgresql
+    ports:
+      - 5432:5432
+    volumes:
+      - db-store:/var/lib/postgresql/data
+      - ./config/pg_hba.conf:/etc/postgresql/pg_hba.conf # dockerホストからクライアントでアクセスするとはじかれるのでここにIPを書く
+      - ./script:/docker-entrypoint-initdb.d # 起動時に実行するSQL
+      - ./config/postgresql.conf:/etc/postgresql/postgresql.conf
+    environment:
+      - POSTGRES_PASSWORD=passw0rd
+        # - POSTGRES_HOST_AUTH_METHOD=trust # パスワード無しで接続する
+volumes:
+  db-store:
