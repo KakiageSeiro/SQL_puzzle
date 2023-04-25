@@ -6,6 +6,7 @@ CREATE TABLE hogeschema.fiscal_year_table1
 (
     fiscal_year INT  NOT NULL PRIMARY KEY, -- 会計年度
     start_date  DATE NOT NULL,             -- 年度開始日。開始日は年次の1年前の10/1しか許可しない。
+    -- CHECK制約にANDで複数の条件を各場合、条件を1つずつ分離して書くことで、条件1つずつに対して制約名を付けれるので、どこでエラーになったか分かりやすくすることもできる。
     CONSTRAINT valid_start_date CHECK (
             (EXTRACT(YEAR FROM start_date) = fiscal_year - 1) -- EXTRACT関数は第一引数で指定した数値を返す
             AND (EXTRACT(MONTH FROM start_date) = 10)
